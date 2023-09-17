@@ -6,6 +6,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/students")
@@ -32,14 +33,16 @@ public class StudentController {
         return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping("{firstName}")
+    @GetMapping("/similar_firstnames/{firstName}")
     ResponseEntity<List<Student>> getStudentsWithSameFirstName(@PathVariable String firstName) {
         return ResponseEntity.ok(studentService.getStudentsWithSimilarFirstName(firstName));
     }
 
     @GetMapping("/{id}")
     ResponseEntity<Student> getStudentById(@PathVariable Long id) {
-        return ResponseEntity.ok(studentService.getStudentById(id));
+        return studentService.getStudentById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }

@@ -45,12 +45,12 @@ public class StudentService {
         repository.saveAll(customers);
     }
 
-    public Student getStudentById(Long id) {
+    public Optional<Student> getStudentById(Long id) {
         QStudent qStudent = getqStudent();
         return Optional.ofNullable(queryFactory.select(qStudent)
                 .from(qStudent)
                 .where(qStudent.id.eq(id))
-                .fetchOne()).orElseThrow();
+                .fetchOne());
     }
 
     private static QStudent getqStudent() {
